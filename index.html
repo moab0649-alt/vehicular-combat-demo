@@ -1,0 +1,236 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <title>Scrapstorm Showdown</title>
+    <meta
+      name="description"
+      content="Mobile-friendly vehicular combat browser demo with chassis, weapon, and tuning kits."
+    >
+    <link rel="stylesheet" href="./styles.css">
+  </head>
+  <body>
+    <div class="app-shell">
+      <header class="topbar">
+        <div>
+          <p class="eyebrow">Mobile browser prototype</p>
+          <h1>Scrapstorm Showdown</h1>
+        </div>
+        <button id="toggleAudio" class="ghost-button" type="button" aria-pressed="false">
+          Sound: Off
+        </button>
+      </header>
+
+      <main>
+        <section id="garageScreen" class="screen active" aria-labelledby="garageTitle">
+          <div class="panel hero-panel">
+            <div class="hero-copy">
+              <p class="eyebrow">Garage</p>
+              <h2 id="garageTitle">Build your arena bruiser</h2>
+              <p>
+                Pick a chassis, weapon kit, and tuning package, then roll into a compact combat
+                trial built for phones and tablets.
+              </p>
+            </div>
+            <div class="hero-summary">
+              <div class="summary-card">
+                <span>Selected chassis</span>
+                <strong id="summaryChassis"></strong>
+              </div>
+              <div class="summary-card">
+                <span>Weapon kit</span>
+                <strong id="summaryWeapon"></strong>
+              </div>
+              <div class="summary-card">
+                <span>Tuning kit</span>
+                <strong id="summaryTuning"></strong>
+              </div>
+            </div>
+          </div>
+
+          <div class="garage-grid">
+            <section class="panel config-panel" aria-labelledby="chassisHeading">
+              <div class="section-title">
+                <h3 id="chassisHeading">1. Choose a chassis</h3>
+                <p>Chassis controls base health, armor, handling, and top speed.</p>
+              </div>
+              <div id="chassisOptions" class="option-grid" role="radiogroup" aria-label="Chassis choices"></div>
+            </section>
+
+            <section class="panel config-panel" aria-labelledby="weaponHeading">
+              <div class="section-title">
+                <h3 id="weaponHeading">2. Install a weapon kit</h3>
+                <p>Each weapon changes damage, cadence, and ideal engagement range.</p>
+              </div>
+              <div id="weaponOptions" class="option-grid" role="radiogroup" aria-label="Weapon kit choices"></div>
+            </section>
+
+            <section class="panel config-panel" aria-labelledby="tuningHeading">
+              <div class="section-title">
+                <h3 id="tuningHeading">3. Fit a tuning package</h3>
+                <p>Tuning shifts armor, repair output, weapon cooling, and mobility.</p>
+              </div>
+              <div id="tuningOptions" class="option-grid" role="radiogroup" aria-label="Tuning kit choices"></div>
+            </section>
+
+            <aside class="panel stat-panel">
+              <div class="section-title">
+                <h3>Live loadout stats</h3>
+                <p>Changes apply instantly so you can compare trade-offs before the match.</p>
+              </div>
+
+              <div class="vehicle-preview" aria-hidden="true">
+                <div class="preview-track"></div>
+                <div id="previewVehicle" class="preview-vehicle">
+                  <span class="preview-turret"></span>
+                </div>
+              </div>
+
+              <div id="statBars" class="stat-bars"></div>
+
+              <div class="loadout-notes">
+                <div>
+                  <span>Special ability</span>
+                  <strong id="specialLabel"></strong>
+                </div>
+                <div>
+                  <span>Battle plan</span>
+                  <strong id="strategyLabel"></strong>
+                </div>
+              </div>
+
+              <button id="startBattle" class="primary-button" type="button">
+                Enter the arena
+              </button>
+            </aside>
+          </div>
+        </section>
+
+        <section id="arenaScreen" class="screen" aria-labelledby="arenaTitle">
+          <div class="panel arena-header">
+            <div>
+              <p class="eyebrow">Arena</p>
+              <h2 id="arenaTitle">Crater Circuit</h2>
+              <p id="arenaBrief"></p>
+            </div>
+            <div class="arena-actions">
+              <button id="backToGarage" class="ghost-button" type="button">Garage</button>
+              <button id="restartBattle" class="primary-button" type="button">Restart</button>
+            </div>
+          </div>
+
+          <div class="arena-layout">
+            <div class="panel canvas-panel">
+              <canvas id="battlefield" width="960" height="540" aria-label="Vehicular combat arena"></canvas>
+              <div id="battleOverlay" class="battle-overlay hidden">
+                <p id="overlayEyebrow" class="eyebrow"></p>
+                <h3 id="overlayTitle"></h3>
+                <p id="overlayText"></p>
+                <div class="overlay-actions">
+                  <button id="overlayReplay" class="primary-button" type="button">Replay</button>
+                  <button id="overlayGarage" class="ghost-button" type="button">Tune build</button>
+                </div>
+              </div>
+            </div>
+
+            <aside class="panel battle-ui">
+              <div class="hud-card">
+                <div class="hud-title-row">
+                  <h3>Your rig</h3>
+                  <span id="playerStatusTag" class="status-pill">Ready</span>
+                </div>
+                <div class="meter">
+                  <div class="meter-label">
+                    <span>Armor</span>
+                    <strong id="playerArmorText"></strong>
+                  </div>
+                </div>
+                <div class="meter">
+                  <div class="meter-label">
+                    <span>Hull</span>
+                    <strong id="playerHullText"></strong>
+                  </div>
+                  <div class="meter-track"><div id="playerHullBar" class="meter-fill friendly"></div></div>
+                </div>
+                <div class="meter">
+                  <div class="meter-label">
+                    <span>Boost</span>
+                    <strong id="boostText"></strong>
+                  </div>
+                  <div class="meter-track"><div id="boostBar" class="meter-fill accent"></div></div>
+                </div>
+                <div class="meter">
+                  <div class="meter-label">
+                    <span>Repair</span>
+                    <strong id="repairText"></strong>
+                  </div>
+                  <div class="meter-track"><div id="repairBar" class="meter-fill support"></div></div>
+                </div>
+              </div>
+
+              <div class="hud-card">
+                <div class="hud-title-row">
+                  <h3>Enemy</h3>
+                  <span id="enemyStatusTag" class="status-pill danger">Aggressive</span>
+                </div>
+                <div class="meter">
+                  <div class="meter-label">
+                    <span>Target</span>
+                    <strong id="enemyNameText">Road Reaper</strong>
+                  </div>
+                </div>
+                <div class="meter">
+                  <div class="meter-label">
+                    <span>Hull</span>
+                    <strong id="enemyHullText"></strong>
+                  </div>
+                  <div class="meter-track"><div id="enemyHullBar" class="meter-fill hostile"></div></div>
+                </div>
+                <p id="enemyBehavior" class="small-copy"></p>
+              </div>
+
+              <div class="hud-card">
+                <div class="hud-title-row">
+                  <h3>Touch controls</h3>
+                  <span class="status-pill neutral">Tablet-ready</span>
+                </div>
+                <div class="controls-layout">
+                  <div class="dpad" aria-label="Movement controls">
+                    <button class="control-button" data-control="up" type="button">▲</button>
+                    <div class="dpad-middle">
+                      <button class="control-button" data-control="left" type="button">◀</button>
+                      <button class="control-button center" type="button" disabled>MOVE</button>
+                      <button class="control-button" data-control="right" type="button">▶</button>
+                    </div>
+                    <button class="control-button" data-control="down" type="button">▼</button>
+                  </div>
+
+                  <div class="action-pad">
+                    <button id="fireButton" class="action-button primary" type="button">Fire</button>
+                    <button id="boostButton" class="action-button accent" type="button">Boost</button>
+                    <button id="repairButton" class="action-button support" type="button">Repair</button>
+                  </div>
+                </div>
+                <p class="small-copy">
+                  Use tap controls, keyboard arrows/WASD, or an external keyboard. The enemy will
+                  pursue, dodge, and fire on sight.
+                </p>
+              </div>
+
+              <div class="hud-card">
+                <div class="hud-title-row">
+                  <h3>Combat feed</h3>
+                  <span id="phaseTag" class="status-pill neutral">Live</span>
+                </div>
+                <ul id="battleLog" class="battle-log" aria-live="polite"></ul>
+              </div>
+            </aside>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <script src="./app.js"></script>
+  </body>
+</html>
