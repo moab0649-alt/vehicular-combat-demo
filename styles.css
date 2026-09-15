@@ -1,0 +1,78 @@
+:root {
+  --bg: #080b12;
+  --fg: #f3f6ff;
+  --accent: #5bd1ff;
+  --danger: #ff5a72;
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.5rem;
+  --font-mono: ui-monospace, SFMono-Regular, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+}
+
+html,
+body {
+  margin: 0;
+  height: 100%;
+  overflow: hidden;
+}
+
+body {
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--font-mono);
+}
+
+#stage {
+  display: block;
+  width: 100vw;
+  height: 100vh;
+}
+
+#ui {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  pointer-events: none;
+}
+
+#ui[hidden] {
+  display: none;
+}
+
+#ui > * {
+  pointer-events: auto;
+}
+
+.menu {
+  display: grid;
+  gap: var(--space-4);
+  justify-items: center;
+  width: min(100% - (var(--space-4) * 2), 20rem);
+  padding: var(--space-5);
+  box-sizing: border-box;
+}
+
+.menu-title {
+  margin: 0;
+  font-size: clamp(2rem, 8vw, 3rem);
+  line-height: 1.1;
+  text-align: center;
+}
+
+.menu-play {
+  min-width: 10rem;
+  min-height: 3rem;
+  padding: var(--space-3) var(--space-4);
+  border: 1px solid var(--accent);
+  background: var(--accent);
+  color: var(--bg);
+  font: inherit;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+@media (min-width: 768px) {
+}
